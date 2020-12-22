@@ -1,0 +1,24 @@
+给定一个非负索引 k，其中 k ≤ 33，返回杨辉三角的第 k 行。
+
+在杨辉三角中，每个数是它左上方和右上方的数的和。
+
+思路：
+对于杨辉三角中的第n行，第m个元素，它的值等于C（n-1）（m-1）
+
+
+class Solution(object):
+    def getRow(self, rowIndex):
+        n = rowIndex
+        m = n + 1
+        def Calculate(n, m):
+            down = 1
+            up = 1
+            for i in range(1, m):
+                down *= i
+            for i in range(1, m):
+                up *= (n + 1 -i)
+            return up 
+        res = list()
+        for i in range(1, m + 1):
+            res.append(Calculate(n, i))
+        return res
