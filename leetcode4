@@ -1,0 +1,36 @@
+给定一个链表，每个节点包含一个额外增加的随机指针，该指针可以指向链表中的任何节点或空节点。
+
+要求返回这个链表的深拷贝。
+
+思路：
+
+使用一个哈希表mapping，key是老结点，val是新节点，
+
+然后把老结点（key)的next和random对应的新节点（mapping[key.next] 和mapping[key.random]）分别赋给新节点(val)的next（val.next）和random（val.random）。
+
+"""
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val, next, random):
+        self.val = val
+        self.next = next
+        self.random = random
+"""
+class Solution(object):
+    def copyRandomList(self, head):
+        """
+        :type head: Node
+        :rtype: Node
+        """
+        mapping = dict()
+        p = head
+        while p:
+            mapping[p] = Node(p.val, None, None)
+            p = p.next
+            
+        for key, val in mapping.items(): #key是老结点， val是新节点
+            if key.next:
+                val.next = mapping[key.next]
+            if key.random and key.random in mapping:
+                val.random = mapping[key.random]  
+        return mapping[head] if head else head
