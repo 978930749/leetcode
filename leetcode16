@@ -1,0 +1,46 @@
+给你一个无序的数组 nums, 将该数字原地重排后使得 nums[0] <= nums[1] >= nums[2] <= nums[3]...。
+
+思路：
+虽然题目要求原地，但是我们可以先想一个简单的非原地版本出来帮助思考。
+
+
+class Solution(object):
+    def wiggleSort(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: None Do not return anything, modify nums in-place instead.
+        """
+        if not nums:
+            return nums
+        nums.sort()
+        if len(nums) % 2 == 0:
+            nums[:] = self.solution1(nums)
+        else:
+            nums[:] = self.solution2(nums)
+    def solution1(self, nums):
+        res = [nums[len(nums) // 2 - 1]]
+        n = len(nums)
+        flag = 1
+        l1, l2 = nums[:len(nums) // 2 - 1][::-1], nums[len(nums)//2 : ]
+        while len(res) < n: 
+            if not flag:
+                res.append(l1.pop())
+                flag = 1
+            else:
+                res.append(l2.pop())
+                flag = 0
+        return res
+    def solution2(self, nums):
+        # 1 2 3 4 5
+        res = [nums[len(nums) // 2]]
+        n = len(nums)
+        flag = 1
+        l1, l2 = nums[:len(nums) // 2][::-1], nums[len(nums)//2:]
+        while len(res) < n:
+            if not flag:
+                res.append(l1.pop())
+                flag = 1
+            else:
+                res.append(l2.pop())
+                flag = 0
+        return res
