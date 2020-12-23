@@ -1,0 +1,64 @@
+根据百度百科，生命游戏，简称为生命，是英国数学家约翰·何顿·康威在1970年发明的细胞自动机。
+给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞具有一个初始状态 live（1）
+即为活细胞， 或 dead（0）即为死细胞。每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下
+四条生存定律：
+如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡；
+如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活；
+如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡；
+如果死细胞周围正好有三个活细胞，则该位置死细胞复活；
+根据当前状态，写一个函数来计算面板上细胞的下一个（一次更新后的）状态。下一个状态是通过将上述规则同
+时应用于当前状态下的每个细胞所形成的，其中细胞的出生和死亡是同时发生的。
+
+思路：
+简单的八方向单位为1的搜索可以得到 八个邻居里 1的个数，然后根据题目要求来判断下一轮是0还是1，
+
+
+class Solution(object):
+    def gameOfLife(self, board):
+        """
+        :type board: List[List[int]]
+        :rtype: void Do not return anything, modify board in-place instead.
+        """
+        m = len(board)
+        if m == 0:
+            return board
+        n = len(board[0])
+        if n == 0:
+            return board
+        
+        alivex = list()
+        alivey = list()
+        
+        def neibor(x, y): #统计八个邻居里有几个是活细胞（1）
+            dx = [1, -1, 0, 0, 1, -1, -1, 1]
+            dy = [0, 0, 1, -1, 1, -1, 1, -1]
+            
+            cnt = 0
+            for k in range(8):
+                xx = x + dx[k]
+                yy = y + dy[k]
+ 
+                if 0 <= xx < m and 0 <= yy < n and board[xx][yy] == 1:
+                    cnt += 1 
+                        
+            return cnt
+        
+        
+        for i in range(m):
+            for j in range(n):
+                cnt = neibor(i, j)
+                # print i, j, cnt
+                if (board[i][j] == 1 and 2 <= cnt <= 3) or (board[i][j] == 0 and cnt == 3):
+                        alivex.append(i)
+                        alivey.append(j)
+        
+        alivecnt = 0
+        for i in range(m):
+            for j in range(n):
+                board[i][j] = 0
+                
+                if alivecnt < len(alivex):
+                    if alivex[alivecnt] == i and alivey[alivecnt] == j:
+                        board[i][j] = 1
+                        alivecnt += 1            
+        return board
