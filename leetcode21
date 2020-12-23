@@ -1,0 +1,12 @@
+给定一个整数 n, 返回从 1 到 n 的字典顺序。
+
+思路：
+字典顺序其实就是按字典序排列，等同于排序的key是str(i)。
+
+class Solution(object):
+    def lexicalOrder(self, n):
+        """
+        :type n: int
+        :rtype: List[int]
+        """
+        return sorted(range(1, n + 1), key = str)
