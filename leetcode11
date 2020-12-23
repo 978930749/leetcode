@@ -1,0 +1,18 @@
+翻转一棵二叉树。
+
+思路：
+注意备份一下root.left 和root.right，因为会被覆盖
+
+class Solution(object):
+    def invertTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if not root:
+            return root
+        left = root.left
+        right = root.right
+        root.right = self.invertTree(left)
+        root.left = self.invertTree(right)
+        return root
