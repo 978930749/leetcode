@@ -1,0 +1,39 @@
+现在你总共有 n 门课需要选，记为 0 到 n-1。
+在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们: [0,1]
+给定课程总量以及它们的先决条件，判断是否可能完成所有课程的学习？
+
+思路：
+用拓扑排序解题，
+1. 找到一个入度为0的结点
+2. 删除这个节点，并把这个节点相邻的结点的入度 - 1
+重复这两步，直到所有的节点都被删除 或者 找不到更多的入度为0的结点为止。
+
+
+class Solution(object):
+    def canFinish(self, numCourses, prerequisites):
+        """
+        :type numCourses: int
+        :type prerequisites: List[List[int]]
+        :rtype: bool
+        """
+        from collections import deque
+        if not prerequisites: #没有前置课的要求
+            return True
+        indegree = [0 for _ in range(numCourses)]
+        adj = [set() for _ in range(numCourses)]
+        for end, start in prerequisites:
+            indegree[end] += 1 #统计入度
+            adj[start].add(end)#生成邻接表
+        queue = deque()
+        for i, x in enumerate(indegree):
+            if not x: #入度为0的结点入队
+                queue.append(i)
+        cnt = 0
+        while queue:
+            cur = queue.popleft() # cur 出队并删除
+            cnt += 1 #当前的cur满足条件
+            for neighbor in adj[cur]:
+                indegree[neighbor] -= 1 #邻居入度- 1
+                if not indegree[neighbor]: #如果邻居入度变成了0了，就让它入队
+                    queue.append(neighbor)
+        return cnt == numCourses #判断是不是所有的点都删除成功了
