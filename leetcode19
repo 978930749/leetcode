@@ -1,0 +1,37 @@
+给定一个嵌套的整型列表。设计一个迭代器，使其能够遍历这个整型列表中的所有整数。
+列表中的项或者为一个整数，或者是另一个列表。
+
+思路：
+先把它全部展开好，然后在调用next的时候逐项输出。
+
+class NestedIterator(object):
+    def __init__(self, nestedList):
+        """
+        Initialize your data structure here.
+        :type nestedList: List[NestedInteger]
+        """
+        self.list = []
+        for item in nestedList:
+            self.list += self.make(item)
+        self.idx = 0
+        print self.list
+        
+    def make(self, item):
+        if item.isInteger():
+            return [item.getInteger()]
+        tmp = []
+        for i in item.getList():
+            tmp += self.make(i)
+        return tmp
+    
+    def next(self):
+        """
+        :rtype: int
+        """
+        self.idx += 1
+        return self.list[self.idx - 1]
+    def hasNext(self):
+        """
+        :rtype: bool
+        """
+        return self.idx < len(self.list) 
