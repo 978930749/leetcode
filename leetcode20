@@ -1,0 +1,37 @@
+用一个非空单链表表示一个非负整数，将这个整数加一。
+你可以假设这个整数除了 0 本身，没有任何前导 0 。
+这个整数的各个数位按照高位在链表头，低位在链表尾的顺序排列。
+
+思路：
+反转链表再逐位处理。
+
+class Solution(object):
+    def reverseList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head is None or head.next is None:
+            return head
+        tmp = self.reverseList(head.next)
+        head.next.next = head
+        head.next = None
+        return tmp
+    
+    def plusOne(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode 
+        """
+        head = self.reverseList(head)
+        tmp = head
+        head.val += 1
+        while(head.val > 9):
+            head.val -= 10
+            if head.next:
+                head.next.val += 1
+                head = head.next
+            else:
+                head.next = ListNode(1)
+                break
+        return self.reverseList(tmp)
