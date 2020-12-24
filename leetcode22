@@ -1,0 +1,30 @@
+给定一个非空数组，返回此数组中第三大的数。如果不存在，则返回数组中最大的数。要求算法时间复杂度必须是O(n)。
+
+思路：
+一共遍历三次，即可找到第三大的数，
+第一次遍历找最大的数，
+第二次遍历排除掉最大的数之后，在剩余的数里找最大的数，这个数就是第二大的数，
+第三次遍历排除掉最大的数和第二大的数之后，在剩余的数里找最大的数，这个数就是第三大的数。
+
+
+class Solution(object):
+    def thirdMax(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        nums = list(set(nums))
+        if len(nums) <= 2:
+            return max(nums)
+        maxx = max(nums) #找最大的数
+        maxx2 = nums[0]
+        for num in nums: #找第二大的数
+            if num == maxx:
+                continue
+            maxx2 = max(num, maxx2)    
+        res = nums[0]
+        for num in nums: #找第三大的数
+            if num == maxx or num == maxx2:
+                continue
+            res = max(num, res)
+        return res
