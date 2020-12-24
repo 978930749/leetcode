@@ -1,0 +1,35 @@
+一条基因序列由一个带有8个字符的字符串表示，其中每个字符都属于 "A", "C", "G", "T"中的任意一个。
+假设我们要调查一个基因序列的变化。一次基因变化意味着这个基因序列中的一个字符发生了变化。
+例如，基因序列由"AACCGGTT" 变化至 "AACCGGTA" 即发生了一次基因变化。
+与此同时，每一次基因变化的结果，都需要是一个合法的基因串，即该结果属于一个基因库。
+现在给定3个参数  start, end, bank，分别代表起始基因序列，目标基因序列及基因库，请找出能够使起始
+基因序列变化为目标基因序列所需的最少变化次数。如果无法实现目标变化，请返回 -1。
+
+思路：
+每条路径的起始点是当前基因，变换一位可以得到的新基因是下一个可以到达的点，新基因必须在基因库里，求从起点到终点的最短路径。
+求最短路径可以用BFS。
+
+from collections import deque
+class Solution(object):
+    def minMutation(self, start, end, bank):
+        bank = set(bank)
+        if end not in bank:
+            return -1
+        q = deque()
+        q.append([start, 0])
+        visited = set()
+        char = "ACGT"
+        while q: #开始BFS
+            cur, cnt = q.popleft() #取一个出来
+            if cur == end: #如果找到了
+                return cnt
+            
+            for i in range(len(cur)):
+                for j in range(4):
+                    new = cur[:i] + char[j] + cur[i + 1:] #生成从当前基因可以变换到的新基因
+                    
+                    if new in bank and new not in visited: #如果新基因有效
+                        visited.add(new)
+                        q.append([new, cnt + 1])                  
+        return -1
+
