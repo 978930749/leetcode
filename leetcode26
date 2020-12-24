@@ -1,0 +1,40 @@
+给定一个单词列表，只返回可以使用在键盘同一行的字母打印出来的单词
+注意：
+你可以重复使用键盘上同一字符。
+你可以假设输入的字符串将只包含字母。
+
+思路：列出键盘三行的字母 并加以判断
+
+class Solution(object):
+    def findWords(self, words):
+        """
+        :type words: List[str]
+        :rtype: List[str]
+        """
+        # words = words.lower()
+        g1 = ["q","w","e","r","t","y","u","i","o","p"]
+        g2 = ["a","s","d","f","g","h","j","k","l"]
+        g3 = ["z","x","c","v","b","n","m"]
+        res = list()
+        for word in words:
+            temp = word.lower()
+            if temp[0] in g1:
+                flag = 1
+            elif temp[0] in g2:
+                flag = 2
+            elif temp[0] in g3:
+                flag = 3
+            temp = set(temp)
+            for char in temp:
+                if flag == 1 and char not in g1:
+                    flag = 0
+                    break
+                if flag == 2 and char not in g2:
+                    flag = 0
+                    break
+                if flag == 3 and char not in g3:
+                    flag = 0
+                    break
+            if flag:
+                res.append(word)        
+        return res
