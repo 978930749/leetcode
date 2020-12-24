@@ -1,40 +1,37 @@
-给定一个单词列表，只返回可以使用在键盘同一行的字母打印出来的单词
-注意：
-你可以重复使用键盘上同一字符。
-你可以假设输入的字符串将只包含字母。
+TinyURL是一种URL简化服务， 比如：当你输入一个URL https://leetcode.com/problems/design-tinyurl 时，它将返回一个简化的URL http://tinyurl.com/4e9iAk.
+要求：设计一个 TinyURL 的加密 encode 和解密 decode 的方法。你的加密和解密算法如何设计和运作是没有限制的，你只需要保证一个URL可以被加密成一个TinyURL，并且这个TinyURL可以用解密方法恢复成原本的URL。
 
-思路：列出键盘三行的字母 并加以判断
+思路：
+每个longURL对应六位random码。
+用两个哈希表模拟数据库查找。
 
-class Solution(object):
-    def findWords(self, words):
+import random
+class Codec:
+    
+    def __init__(self):
+        self.alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        self.s2l = dict()
+        self.l2s = dict()
+        
+    def encode(self, longUrl):
+        """Encodes a URL to a shortened URL.
+        
+        :type longUrl: str
+        :rtype: str
         """
-        :type words: List[str]
-        :rtype: List[str]
+        while longUrl not in self.l2s:
+            code = "".join(random.choice(self.alphabet) for _ in range(6))
+            if code not in self.s2l:
+                self.s2l[code] = longUrl
+                self.l2s[longUrl] = code
+            
+        return "http://tinyurl.com/" + self.l2s[longUrl]
+        
+    def decode(self, shortUrl):
+        """Decodes a shortened URL to its original URL.
+        
+        :type shortUrl: str
+        :rtype: str
         """
-        # words = words.lower()
-        g1 = ["q","w","e","r","t","y","u","i","o","p"]
-        g2 = ["a","s","d","f","g","h","j","k","l"]
-        g3 = ["z","x","c","v","b","n","m"]
-        res = list()
-        for word in words:
-            temp = word.lower()
-            if temp[0] in g1:
-                flag = 1
-            elif temp[0] in g2:
-                flag = 2
-            elif temp[0] in g3:
-                flag = 3
-            temp = set(temp)
-            for char in temp:
-                if flag == 1 and char not in g1:
-                    flag = 0
-                    break
-                if flag == 2 and char not in g2:
-                    flag = 0
-                    break
-                if flag == 3 and char not in g3:
-                    flag = 0
-                    break
-            if flag:
-                res.append(word)        
-        return res
+        key = shortUrl[-6:]
+        return self.s2l[key]
