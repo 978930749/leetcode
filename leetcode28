@@ -1,0 +1,26 @@
+你的面前有一堵方形的、由多行砖块组成的砖墙。 这些砖块高度相同但是宽度不同。你现在要画一条自顶向下的、穿过最少砖块的垂线。
+砖墙由行的列表表示。 每一行都是一个代表从左至右每块砖的宽度的整数列表。
+如果你画的线只是从砖块的边缘经过，就不算穿过这块砖。你需要找出怎样画才能使这条线穿过的砖块数量最少，并且返回穿过的砖块数量。
+你不能沿着墙的两个垂直边缘之一画线，这样显然是没有穿过一块砖的。
+
+思路：
+开一个hashmap记录一下，key是在某个点的距离墙的左壁的距离，value是在这个点有多少块砖刚好结束。
+举例，对于第一行砖块[1,2,2,1]，可以得到[0, 1,0, 1, 0, 1, 1],这代表在第1， 3， 5,6个单位长度上有砖块结束。
+最后返回砖的层数 - value 最大值就好（注意墙的最左边和最右边不能算）
+
+class Solution(object):
+    def leastBricks(self, wall):
+        """
+        :type wall: List[List[int]]
+        :rtype: int
+        """
+        record = dict()
+        
+        for row in wall:
+            temp = 0
+            for i in range(len(row) - 1):
+                temp += row[i]
+                record[temp] = record.get(temp, 0) + 1
+        if not record:
+            return len(wall)
+        return len(wall) - max(record.values())
